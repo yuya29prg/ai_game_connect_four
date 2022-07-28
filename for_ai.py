@@ -5,6 +5,42 @@ def get_keys_empty(board_array): #空所リストの番号取り出し
     keys = [k for k, v in board_array.items() if v == 1 ]
     return keys
 
+def reach_check(board_array,my_koma_number):
+    if victory_column(board_array,my_koma_number) != 0:
+        return to_hand(victory_column(board_array,my_koma_number))
+    elif victory_row(board_array,my_koma_number):
+        return to_hand(victory_row(board_array,my_koma_number))
+    else: 
+        return 0
+    
+def victory_column(board_array,my_koma_number):
+    for i in range(0,37,6):
+        count = 0
+        for j in range(1,7,1):
+            if board_array.get(j+i) == my_koma_number:
+                count = count + 1  
+                if count == 3:
+                    if board_array.get(j+i+1) == 1:
+                        return j+i+1
+            else:
+                count = 0        
+    return 0
+
+def victory_row(board_array,my_koma_number):
+    for i in range(6,0,-1):
+        count = 0
+        for j in range(0,7,1):
+            if board_array.get(i+j*6) == my_koma_number:
+                count = count + 1
+                if count == 3:
+                    if board_array.get(i+(j*6)+6) == 1:
+                        return i+(j*6)+6
+                    elif board_array.get(i+(8*j)-18) == 1:
+                        return  (i+(8*j)-18)
+            else:
+                count = 0
+    return 0
+    
 def ai(board_array,turn_flag):
     the_best_score = 0
     the_best_hand = 1
@@ -12,21 +48,21 @@ def ai(board_array,turn_flag):
     hand = 0
     
     if turn_flag % 2 == 1:#aiが後手
-        ai_turn_2 = 2
-        ai_turn_3 = 6
-        ai_turn_4 = 1000
-        opposit_turn_2 = -3
-        opposit_turn_3 = -7
-        opposit_turn_4 = -1000
+        ai_turn_2 = 3    #
+        ai_turn_3 = 7
+        ai_turn_4 = 10000
+        opposit_turn_2 = -4
+        opposit_turn_3 = -9
+        opposit_turn_4 = -10000
         ai_koma_number = 3
         my_koma_number = 2
     else: 
-        ai_turn_2 = 3 #aiが先手
-        ai_turn_3 = 7
-        ai_turn_4 = 1000
-        opposit_turn_2 = -2
-        opposit_turn_3 = -6
-        opposit_turn_4 = -1000
+        ai_turn_2 = 4 #aiが先手
+        ai_turn_3 = 8
+        ai_turn_4 = 10000
+        opposit_turn_2 = -5
+        opposit_turn_3 = -9
+        opposit_turn_4 = -10000
         ai_koma_number = 2
         my_koma_number = 3
     for i in range(len(get_keys_empty(board_array))): #5回分繰り返してる，再帰とかに変更できたらベストかも
@@ -177,36 +213,36 @@ def check_score(board_array,turn_flag,true_or_false):#trueだったらaiのタ�
     if true_or_false:
         if ai_koma_number == 3:#aiが後手のとき
             for i in range(0,68,1):
-                if check_list1[i].count(ai_koma_number) == 2 and check_list1.count(my_koma_number)  == 0: #4つの中に3が2個かつ2が0個
+                if check_list1[i].count(ai_koma_number) == 2 and check_list1[i].count(my_koma_number)  == 0: #4つの中に3が2個かつ2が0個
                         count =  count + 2
-                elif check_list1[i].count(ai_koma_number) == 3 and check_list1.count(my_koma_number)  == 0:
+                elif check_list1[i].count(ai_koma_number) == 3 and check_list1[i].count(my_koma_number)  == 0:
                         count = count + 6
                 elif check_list1[i].count(ai_koma_number) == 4:
                         count = count + 1000
         elif ai_koma_number == 2:
             for i in range(0,68,1):
-                if check_list1[i].count(ai_koma_number) == 2 and check_list1.count(my_koma_number)  == 0:
+                if check_list1[i].count(ai_koma_number) == 2 and check_list1[i].count(my_koma_number)  == 0:
                         count =  count + 3
-                elif check_list1[i].count(ai_koma_number) == 3 and check_list1.count(my_koma_number)  == 0:
+                elif check_list1[i].count(ai_koma_number) == 3 and check_list1[i].count(my_koma_number)  == 0:
                         count = count + 10
                 elif check_list1[i].count(ai_koma_number) == 4 :
                         count = count + 1000
     else:
         if ai_koma_number == 3:
             for i in range(0,68,1):
-                if check_list1[i].count(my_koma_number) == 2 and check_list1.count(ai_koma_number)  == 0:
-                        count =  count - 3
-                elif check_list1[i].count(ai_koma_number) == 3 and check_list1.count(my_koma_number)  == 0:
-                        count = count - 7
-                elif check_list1[i].count(ai_koma_number) == 4 :
+                if check_list1[i].count(my_koma_number) == 2 and check_list1[i].count(ai_koma_number)  == 0:
+                        count =  count - 4
+                elif check_list1[i].count(my_koma_number) == 3 and check_list1[i].count(my_koma_number)  == 0:
+                        count = count - 8
+                elif check_list1[i].count(my_koma_number) == 4 :
                         count = count - 1000
         elif ai_koma_number == 2:
             for i in range(0,68,1):
-                if check_list1[i].count(ai_koma_number) == 2 and check_list1.count(my_koma_number)  == 0:
-                        count =  count - 2
-                elif check_list1[i].count(ai_koma_number) == 3 and check_list1.count(my_koma_number)  == 0:
-                        count = count - 6 
-                elif check_list1[i].count(ai_koma_number) == 4 :
+                if check_list1[i].count(my_koma_number) == 2 and check_list1[i].count(my_koma_number)  == 0:
+                        count =  count - 5
+                elif check_list1[i].count(my_koma_number) == 3 and check_list1[i].count(my_koma_number)  == 0:
+                        count = count - 12
+                elif check_list1[i].count(my_koma_number) == 4 :
                         count = count - 1000
             
     return count
