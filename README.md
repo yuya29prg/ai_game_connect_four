@@ -1,2 +1,2 @@
-# 人工知能の授業で作成したコネクトフォーアプリ
-普段使用しないpythonを利用したため基本的な文法があってない可能性がある
+# Connect Four app created in Artificial Intelligence class.
+It is possible that the basic syntax is not correct because we used python, which is not usually used.
